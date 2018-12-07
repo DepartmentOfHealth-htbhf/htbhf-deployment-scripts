@@ -8,13 +8,6 @@
 # quit at the first error
 set -e
 
-# if this is a pull request or branch (non-master) build, then just exit
-echo "TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST, TRAVIS_BRANCH=$TRAVIS_BRANCH"
-if [[ "$TRAVIS_PULL_REQUEST" != "false"  || "$TRAVIS_BRANCH" != "master" ]]; then
-    echo "Not tagging pull request or branch build"
-    exit
-fi
-
 # make sure we know about all tags
 git fetch --tags -q
 
@@ -27,7 +20,7 @@ NEW_VERSION=$(echo "$LAST_VERSION" | awk '{printf($1$2+1)}')
 echo "GIT_LATEST_TAG=$GIT_LATEST_TAG, NEW_VERSION=$NEW_VERSION"
 
 # tag the new release in git
-git tag -a $NEW_VERSION -m "Release $NEW_VERSION"
+git tag -a ${NEW_VERSION} -m "Release $NEW_VERSION"
 
 # push the new tag back to github
 git config --local user.email "travis@travis-ci.org"
