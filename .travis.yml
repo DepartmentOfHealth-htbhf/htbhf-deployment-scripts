@@ -1,0 +1,7 @@
+language: generic
+
+deploy:
+  provider: script
+  script: tag_git_version.sh
+  on:
+    branch: master
