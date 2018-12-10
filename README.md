@@ -17,8 +17,8 @@ For Non-Java apps, it must be pointed to the app root directory - e.g. `.`.
 - `CF_SPACE` - the space to use when logging into cf
 - `CF_DOMAIN` - the domain the application will be visible in. E.g. apps.internal for private apps.
 - `CF_PUBLIC_DOMAIN` - a domain, visible to the outside world, to which a (randomly named) route will be created to allow smoke testing. 
-- `SMOKE_TESTS` - the script to invoke smoke tests. Will be passed a single parameter - the hostname of the public route to run tests against.
-- `PROTOCOL` - the protocol (e.g. https) used to make connections to the app. Will be part of the parameter passed to the smoke tests.
+- `SMOKE_TESTS` - the script to invoke smoke tests. 
+Will be passed a single parameter - the hostname of the public route to run tests against.
 
 
 Suggested usage is to add a ci_deploy script to your project (e.g. as `ci_scripts/ci_deploy.sh`): - this example is for a java project
