@@ -36,7 +36,7 @@ perform_blue_green_deployment() {
   GREEN_APP="${APP_FULL_NAME}-green"
 
   echo "# pushing new (green) app without a route"
-  cf push -p ${APP_PATH} --var suffix=${CF_SPACE}-green --no-route
+  cf push -p ${APP_PATH} --var suffix=-${CF_SPACE}-green --var session_secret=${SESSION_SECRET} --no-route
 
   echo "# creating a temporary (public) route to the green app"
   ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
