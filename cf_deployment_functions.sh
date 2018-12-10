@@ -13,7 +13,7 @@ remove_route() {
 perform_first_time_deployment() {
   echo "$APP_FULL_NAME does not exist, doing regular deployment"
 
-  cf push -p ${APP_PATH} --var suffix=${CF_SPACE}
+  cf push -p ${APP_PATH} --var suffix=-${CF_SPACE} --var session_secret="${SESSION_SECRET}"
 
   ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
   cf map-route ${APP_FULL_NAME} ${CF_PUBLIC_DOMAIN} --hostname ${ROUTE}
@@ -36,7 +36,7 @@ perform_blue_green_deployment() {
   GREEN_APP="${APP_FULL_NAME}-green"
 
   echo "# pushing new (green) app without a route"
-  cf push -p ${APP_PATH} --var suffix=-${CF_SPACE}-green --var session_secret=${SESSION_SECRET} --no-route
+  cf push -p ${APP_PATH} --var suffix=-${CF_SPACE}-green --var session_secret="${SESSION_SECRET}" --no-route
 
   echo "# creating a temporary (public) route to the green app"
   ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
