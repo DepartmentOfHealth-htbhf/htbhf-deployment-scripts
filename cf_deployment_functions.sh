@@ -18,7 +18,7 @@ perform_first_time_deployment() {
   ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
   cf map-route ${APP_FULL_NAME} ${CF_PUBLIC_DOMAIN} --hostname ${ROUTE}
 
-  (${SMOKE_TESTS} ${PROTOCOL}://${ROUTE}.${CF_PUBLIC_DOMAIN})
+  (${SMOKE_TESTS} ${ROUTE}.${CF_PUBLIC_DOMAIN})
   RESULT=$?
 
   remove_route ${ROUTE} ${CF_PUBLIC_DOMAIN} ${APP_FULL_NAME}
@@ -43,7 +43,7 @@ perform_blue_green_deployment() {
   cf map-route ${GREEN_APP} ${CF_PUBLIC_DOMAIN} --hostname ${ROUTE}
 
   echo "# run smoke tests"
-  (${SMOKE_TESTS} ${PROTOCOL}://${ROUTE}.${CF_PUBLIC_DOMAIN})
+  (${SMOKE_TESTS} ${ROUTE}.${CF_PUBLIC_DOMAIN})
   RESULT=$?
 
   echo "# removing the temporary route"
