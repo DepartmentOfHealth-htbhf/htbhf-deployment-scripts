@@ -7,8 +7,9 @@ These scripts require the following environment variables to be set:
 
 - `BIN_DIR ` - the directory where these scripts (and the cf cli tool) will be downloaded. E.g. ./bin.
 - `APP_NAME ` - the name of the application
-- `APP_PATH ` - the location of the application on the local filesystem. For Java app, it must be pointed to a valid jar or war file. For Non-Java app, it must be pointed to app root directory.
-- `APP_LOCATION ` - TODO - this only works for java apps 
+- `APP_PATH ` - the location of the application on the local filesystem.
+For Java apps, it must be pointed to a valid jar or war file - e.g. `build/libs/my-app-1.0.0.jar`.
+For Non-Java apps, it must be pointed to the app root directory - e.g. `.`.
 - `CF_API` - the api to use when logging into cf
 - `CF_ORG` - the org to use when logging into cf
 - `CF_USER` - the user to use when logging into cf
@@ -55,7 +56,7 @@ fi
 
 # determine APP_PATH
 APP_VERSION=`cat version.properties | grep "version" | cut -d'=' -f2`
-APP_PATH="${APP_LOCATION}/$APP_NAME-$APP_VERSION.jar"
+APP_PATH="build/libs/$APP_NAME-$APP_VERSION.jar"
 # note that for node projects APP_PATH would simply be `.`
 
 
