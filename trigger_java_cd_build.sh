@@ -35,6 +35,6 @@ curl -s -X POST \
    -H "Content-Type: application/json" \
    -H "Accept: application/json" \
    -H "Travis-API-Version: 3" \
-   -H "Authorization: token zKqvM4sQf4mczbn0mvARzw" \
+   -H "Authorization: token ${TRAVIS_AUTH_TOKEN}" \
    -d "${REQUEST_BODY}" \
    https://api.travis-ci.com/repo/DepartmentOfHealth-htbhf%2Fhtbhf-continous-delivery/requests
