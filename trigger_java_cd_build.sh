@@ -36,4 +36,4 @@ curl -s -X POST \
    -H "Travis-API-Version: 3" \
    -H "Authorization: token ${AUTH_TOKEN}" \
    -d "${REQUEST_BODY}" \
-   https://api.travis-ci.com/repo/DepartmentOfHealth-htbhf%2Fhtbhf-continous-delivery/requestsAUTH_TOKEN
+   https://api.travis-ci.com/repo/DepartmentOfHealth-htbhf%2Fhtbhf-continous-delivery/requests
