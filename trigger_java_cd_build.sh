@@ -25,7 +25,8 @@ REQUEST_BODY='{
         "MANIFEST_URL": "'${MANIFEST_URL}'",
         "APP_NAME": "'${APP_NAME}'",
         "CF_DOMAIN": "'${CF_DOMAIN}'"
-      }
+      },
+      "script": "cd_scripts/run.sh"
     }
   }
 }'
