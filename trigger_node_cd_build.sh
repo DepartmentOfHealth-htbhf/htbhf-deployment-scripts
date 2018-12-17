@@ -7,7 +7,6 @@ check_variable_is_set(){
     fi
 }
 
-check_variable_is_set BINTRAY_ROOT_URL
 check_variable_is_set APP_NAME
 check_variable_is_set CF_DOMAIN
 
