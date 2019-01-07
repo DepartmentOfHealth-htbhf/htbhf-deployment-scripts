@@ -27,6 +27,7 @@ REQUEST_BODY='{
       "env": {
         "ZIP_URL": "'${ZIP_URL}'",
         "APP_NAME": "'${APP_NAME}'",
+        "APP_VERSION": "'${VERSION}'",
         "CF_DOMAIN": "'${CF_DOMAIN}'"
       },
       "script": "cd_scripts/run.sh"

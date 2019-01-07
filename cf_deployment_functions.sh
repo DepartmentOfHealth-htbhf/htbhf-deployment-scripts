@@ -28,6 +28,8 @@ perform_first_time_deployment() {
     cf delete -f -r ${APP_FULL_NAME}
     exit 1
   fi
+
+  set_app_version_environment_variable
 }
 
 perform_blue_green_deployment() {
@@ -64,10 +66,17 @@ perform_blue_green_deployment() {
   cf delete -f ${BLUE_APP}
   echo "# rename green -> blue"
   cf rename ${GREEN_APP} ${BLUE_APP}
+
+  set_app_version_environment_variable
 }
 
 unmap_blue_route() {
   if cf check-route ${APP_FULL_NAME} ${CF_DOMAIN}; then
     cf unmap-route ${APP_FULL_NAME} ${CF_DOMAIN} --hostname ${APP_FULL_NAME}
   fi
+}
+
+set_app_version_environment_variable() {
+  echo "# setting APP_VERSION=${APP_VERSION} for ${APP_FULL_NAME}"
+  cf set-env ${APP_FULL_NAME} APP_VERSION "${APP_VERSION}"
 }
