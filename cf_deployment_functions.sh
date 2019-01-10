@@ -24,7 +24,9 @@ perform_first_time_deployment() {
   remove_route ${ROUTE} ${CF_PUBLIC_DOMAIN} ${APP_FULL_NAME}
 
   if [[ ${RESULT} != 0 ]]; then
-    echo "Tests failed, rolling back deployment of $APP_FULL_NAME"
+    echo "# Smoke tests failed, reading logs from $APP_FULL_NAME"
+    cf logs ${APP_FULL_NAME} --recent
+    echo "# Rolling back deployment of $APP_FULL_NAME"
     cf delete -f -r ${APP_FULL_NAME}
     exit 1
   fi
@@ -53,7 +55,9 @@ perform_blue_green_deployment() {
 
   # roll back if tests failed
   if [[ ${RESULT} != 0 ]]; then
-    echo "# Tests failed, rolling back deployment of GREEN_APP"
+    echo "# Smoke tests failed, reading logs from $GREEN_APP"
+    cf logs ${GREEN_APP} --recent
+    echo "# Rolling back deployment of $GREEN_APP"
     cf delete -f -r ${GREEN_APP}
     exit 1
   fi
