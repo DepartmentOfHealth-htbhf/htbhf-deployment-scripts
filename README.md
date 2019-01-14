@@ -3,11 +3,34 @@
 Common scripts required to deploy projects to cloudfoundry using a blue/green deployment pattern,
 and running user-defined smoke tests to verify the new service is running.
 
+### Variables used when deploying the app
+When invoking the `cf push` command, a number of variables are provided that can be referred to in the `manifest.yml` file:
+
+- `app-suffix` - e.g. `-development-green`, a suffix to be appended to the application name, to distinguish the new (green) version from the existing version.
+- `space-suffix` - e.g. `-development`, a suffix to distinguish apps between environments.
+- `session_secret` - e.g. `veryverysecret`, may be used to define any secrets required by the app (e.g. the session secret required by redis).
+
+These may be used in the CloudFoundry `manifest.yml` file as follows, for example:
+```.yaml
+applications:
+- name: my-app((app-suffix))
+  env:
+    SESSION_SECRET: '((session_secret))'
+    DOWNSTREAM_SERVICE_URL: http://other-service((space-suffix)).apps.internal:8080
+```
+
+### Network Policies
+In order to allow communications between apps in CloudFoundry we must explicitly invoke `cf add-network-policy` to open a channel between each pair of apps that need to communicate.
+This is handled by the deployment scripts, for each pair of applications listed in `network-policies.properties` (in this project).
+Refer to the comments in `network-policies.properties` for more information on the format.
+
+### Environment variables
 These scripts require the following environment variables to be set:
 
 - `BIN_DIR ` - the directory where these scripts (and the cf cli tool) will be downloaded. E.g. ./bin.
 - `APP_NAME ` - the name of the application
-- `APP_PATH ` - the location of the application on the local filesystem.
+- `APP_NAME ` - the name of the application
+- `APP_VERSION ` - the version to be deployed.
 For Java apps, it must be pointed to a valid jar or war file - e.g. `build/libs/my-app-1.0.0.jar`.
 For Non-Java apps, it must be pointed to the app root directory - e.g. `.`.
 - `CF_API` - the api to use when logging into cf
@@ -69,7 +92,7 @@ APP_PATH="build/libs/$APP_NAME-$APP_VERSION.jar"
 # run the deployment script
 /bin/bash ${SCRIPT_DIR}/deploy.sh
 ```
-The invoke this script in your travis-ci build - in `.travis.yml`:
+Then invoke this script in your travis-ci build - in `.travis.yml`:
 ```
 script:
 - ./gradlew build -s && ./ci_scripts/ci_deploy.sh && ./gradlew ciPerformRelease -s

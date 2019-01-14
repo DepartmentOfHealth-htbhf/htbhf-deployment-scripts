@@ -92,19 +92,20 @@ add_network_polices() {
   suffix=$1
   cat ${SCRIPT_DIR}/network-policies.properties | grep ${APP_NAME} | while read route
   do
-    # src and dest must have <<suffix>> replaced according to whether they are the application currently being deployed
+    # src and dest must have a suffix appended according to whether they are the application currently being deployed
+    # i.e. 'app-name${suffix}' for the app being deployed, 'app-name${SPACE_SUFFIX}' for other apps
     src=$(echo ${route} | cut -d= -f1)
-    if [ ${src} = "${APP_NAME}<<suffix>>" ]; then
-      src=$(echo ${src} | sed "s/<<suffix>>/$suffix/g")
+    if [ ${src} = "${APP_NAME}" ]; then
+      src="${src}${suffix}"
     else
-      src=$(echo ${src} | sed "s/<<suffix>>/${SPACE_SUFFIX}/g")
+      src="${src}${SPACE_SUFFIX}"
     fi
 
     dest=$(echo ${route} | cut -d= -f2)
-    if [ ${dest} = "${APP_NAME}<<suffix>>" ]; then
-      dest=$(echo ${dest} | sed "s/<<suffix>>/$suffix/g")
+    if [ ${dest} = "${APP_NAME}" ]; then
+      dest="${dest}${suffix}"
     else
-      dest=$(echo ${dest} | sed "s/<<suffix>>/${SPACE_SUFFIX}/g")
+      dest="${dest}${SPACE_SUFFIX}"
     fi
 
     echo "creating network policy from $src to $dest"
