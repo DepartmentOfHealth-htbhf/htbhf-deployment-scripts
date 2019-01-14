@@ -1,4 +1,4 @@
 language: generic
 
 after_success:
-- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && ./tag_git_version.sh
+- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && ./create_release.sh

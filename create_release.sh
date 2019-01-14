@@ -28,3 +28,7 @@ git config --local user.name "Travis CI"
 
 echo "git push https://[SECRET]@github.com/${TRAVIS_REPO_SLUG}.git ${NEW_VERSION}"
 git push https://${GH_WRITE_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git ${NEW_VERSION}
+
+# create the release in github
+body="{\"tag_name\": \"${NEW_VERSION}\", \"name\": \"${NEW_VERSION}\"}"
+curl -H "Authorization: token ${GH_WRITE_TOKEN}" -H "Content-Type: application/json" -d "${body}" https://api.github.com/repos/DepartmentOfHealth-htbhf/htbhf-deployment-scripts/releases

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PATH=$PATH:${BIN_DIR}
+export PATH=$PATH:${SCRIPT_DIR}
 
 check_variable_is_set(){
     if [[ -z ${!1} ]]; then
@@ -11,7 +11,7 @@ check_variable_is_set(){
  # check necessary environment variables are set and not empty
 check_variable_is_set APP_NAME
 check_variable_is_set APP_PATH
-check_variable_is_set BIN_DIR
+check_variable_is_set SCRIPT_DIR
 check_variable_is_set CF_SPACE
 check_variable_is_set CF_API
 check_variable_is_set CF_ORG
@@ -21,9 +21,9 @@ check_variable_is_set CF_DOMAIN
 check_variable_is_set CF_PUBLIC_DOMAIN
 check_variable_is_set SMOKE_TESTS
 
-/bin/bash ${BIN_DIR}/install_cf_cli.sh;
+/bin/bash ${SCRIPT_DIR}/install_cf_cli.sh;
 
-source ${BIN_DIR}/cf_deployment_functions.sh
+source ${SCRIPT_DIR}/cf_deployment_functions.sh
 
 APP_FULL_NAME="$APP_NAME-$CF_SPACE"
 

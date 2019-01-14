@@ -90,7 +90,7 @@ set_app_version_environment_variable() {
 
 add_network_polices() {
   suffix=$1
-  cat ${BIN_DIR}/network-policies.properties | grep ${APP_NAME} | while read route
+  cat ${SCRIPT_DIR}/network-policies.properties | grep ${APP_NAME} | while read route
   do
     # src and dest must have <<suffix>> replaced according to whether they are the application currently being deployed
     src=$(echo ${route} | cut -d= -f1)
