@@ -32,6 +32,13 @@ cf login -a ${CF_API} -u ${CF_USER} -p "${CF_PASS}" -s ${CF_SPACE} -o ${CF_ORG}
 
 echo "Deploying $APP_FULL_NAME to $CF_SPACE from $APP_PATH"
 
+SPACE_SUFFIX="-${CF_SPACE}"
+if [[ ${CF_SPACE} == 'production' ]]; then
+	SPACE_SUFFIX=''
+fi
+
+export SPACE_SUFFIX
+
 # if the app already exists, perform a blue green deployment, if not then a regular deployment
 if cf app ${APP_FULL_NAME} >/dev/null 2>/dev/null; then
   perform_blue_green_deployment
