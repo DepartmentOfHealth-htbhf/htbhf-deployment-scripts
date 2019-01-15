@@ -25,6 +25,7 @@ REQUEST_BODY='{
     "branch": "master",
     "config": {
       "env": {
+        "GITHUB_REPO_SLUG": "'${TRAVIS_REPO_SLUG}'",
         "ZIP_URL": "'${ZIP_URL}'",
         "APP_NAME": "'${APP_NAME}'",
         "APP_VERSION": "'${VERSION}'",
