@@ -14,6 +14,12 @@ perform_first_time_deployment() {
   echo "$APP_FULL_NAME does not exist, doing regular deployment"
 
   cf push -p ${APP_PATH} --var suffix=${SPACE_SUFFIX} --var session_secret="secret_${SESSION_SECRET}"
+  RESULT=$?
+  if [[ ${RESULT} != 0 ]]; then
+    cf logs ${APP_FULL_NAME} --recent
+    echo "cf push failed - exiting now"
+    exit 1
+  fi
   add_network_polices ${SPACE_SUFFIX}
 
   ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
@@ -43,6 +49,12 @@ perform_blue_green_deployment() {
 
   echo "# pushing new (green) app without a route"
   cf push -p ${APP_PATH} --var app-suffix=${SPACE_SUFFIX}-green --var space-suffix=${SPACE_SUFFIX} --var session_secret="secret_${SESSION_SECRET}" --no-route
+  RESULT=$?
+  if [[ ${RESULT} != 0 ]]; then
+    cf logs ${GREEN_APP} --recent
+    echo "cf push failed - exiting now"
+    exit 1
+  fi
   add_network_polices ${SPACE_SUFFIX}-green
 
   echo "# creating a temporary (public) route to the green app"
