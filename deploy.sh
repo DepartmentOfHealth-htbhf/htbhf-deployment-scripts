@@ -27,8 +27,7 @@ source ${SCRIPT_DIR}/cf_deployment_functions.sh
 
 APP_FULL_NAME="$APP_NAME-$CF_SPACE"
 
-echo "Logging into cloud foundry with api:$CF_API, org:$CF_ORG, space:$CF_SPACE with user:$CF_USER"
-cf login -a ${CF_API} -u ${CF_USER} -p "${CF_PASS}" -s ${CF_SPACE} -o ${CF_ORG}
+cf_login
 
 echo "Deploying $APP_FULL_NAME to $CF_SPACE from $APP_PATH"
 
