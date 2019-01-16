@@ -1,6 +1,15 @@
 #!/bin/bash
 
-remove_route() {
+cf_login() {
+  echo "Logging into cloud foundry with api:$CF_API, org:$CF_ORG, space:$CF_SPACE, user:$CF_USER"
+  cf login -a ${CF_API} -u ${CF_USER} -p "${CF_PASS}" -s ${CF_SPACE} -o ${CF_ORG}
+}
+
+create_random_route_name() {
+  export ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
+}
+
+}remove_route() {
   MY_HOST=$1
   MY_DOMAIN=$2
   MY_APP=$3
@@ -22,7 +31,7 @@ perform_first_time_deployment() {
   fi
   add_network_polices ${SPACE_SUFFIX}
 
-  ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
+  create_random_route_name
   cf map-route ${APP_FULL_NAME} ${CF_PUBLIC_DOMAIN} --hostname ${ROUTE}
 
   echo "# run smoke tests"
@@ -58,7 +67,7 @@ perform_blue_green_deployment() {
   add_network_polices ${SPACE_SUFFIX}-green
 
   echo "# creating a temporary (public) route to the green app"
-  ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
+  create_random_route_name
   cf map-route ${GREEN_APP} ${CF_PUBLIC_DOMAIN} --hostname ${ROUTE}
 
   echo "# run smoke tests"

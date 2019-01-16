@@ -20,9 +20,7 @@ check_variable_is_set BASIC_AUTH_USER
 check_variable_is_set BASIC_AUTH_PASS
 check_variable_is_set CF_PUBLIC_DOMAIN # london.cloudapps.digital
 
-
-echo "Logging into cloud foundry with api:$CF_API, org:$CF_ORG, space:$CF_SPACE with user:$CF_USER"
-cf login -a ${CF_API} -u ${CF_USER} -p "${CF_PASS}" -s ${CF_SPACE} -o ${CF_ORG}
+cf_login
 
 echo "Creating service help-to-buy-healthy-foods-redis"
 cf create-service redis tiny-clustered-3.2 help-to-buy-healthy-foods-redis
