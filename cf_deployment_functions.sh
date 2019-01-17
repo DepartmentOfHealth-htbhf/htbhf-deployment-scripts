@@ -9,7 +9,7 @@ create_random_route_name() {
   export ROUTE=$(cat /dev/urandom | tr -dc 'a-z' | fold -w 16 | head -n 1)
 }
 
-}remove_route() {
+remove_route() {
   MY_HOST=$1
   MY_DOMAIN=$2
   MY_APP=$3
