@@ -19,12 +19,16 @@ VERSION=$(sed -nE 's/^[ \\t]*"version": "([0-9]{1,}\.[0-9]{1,}\.[0-9x]{1,})",$/\
 #   The second ensures that we use the https variant if the repo was cloned using ssh.
 GIT_REPO_URL=$(git remote -v | grep fetch | grep origin | sed -nE 's/^origin\s(.*)\.git.*$/\1/p' | sed 's~git@github.com:~https://~')
 ZIP_URL="${GIT_REPO_URL}/archive/v${VERSION}.zip"
+RUN_COMPATIBILITY_TESTS=${RUN_COMPATIBILITY_TESTS:-true}
+RUN_PERFORMANCE_TESTS=${RUN_PERFORMANCE_TESTS:-true}
 
 REQUEST_BODY='{
   "request": {
     "branch": "master",
     "config": {
       "env": {
+        "RUN_COMPATIBILITY_TESTS": "'${RUN_COMPATIBILITY_TESTS}'",
+        "RUN_PERFORMANCE_TESTS": "'${RUN_PERFORMANCE_TESTS}'",
         "GITHUB_REPO_SLUG": "'${TRAVIS_REPO_SLUG}'",
         "ZIP_URL": "'${ZIP_URL}'",
         "APP_NAME": "'${APP_NAME}'",
