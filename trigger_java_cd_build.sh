@@ -15,12 +15,16 @@ check_variable_is_set CF_DOMAIN
 VERSION=`cat version.properties | grep "previousVersion" | cut -d'=' -f2`
 APP_URL=${BINTRAY_ROOT_URL}/${APP_NAME}/${VERSION}/${APP_NAME}-${VERSION}.jar
 MANIFEST_URL=${BINTRAY_ROOT_URL}/${APP_NAME}-manifest/${VERSION}/${APP_NAME}-manifest-${VERSION}.jar
+RUN_COMPATIBILITY_TESTS=${RUN_COMPATIBILITY_TESTS:-false}
+RUN_PERFORMANCE_TESTS=${RUN_PERFORMANCE_TESTS:-true}
 
 REQUEST_BODY='{
   "request": {
     "branch": "master",
     "config": {
       "env": {
+        "RUN_COMPATIBILITY_TESTS": "'${RUN_COMPATIBILITY_TESTS}'",
+        "RUN_PERFORMANCE_TESTS": "'${RUN_PERFORMANCE_TESTS}'",
         "GITHUB_REPO_SLUG": "'${TRAVIS_REPO_SLUG}'",
         "APP_URL": "'${APP_URL}'",
         "MANIFEST_URL": "'${MANIFEST_URL}'",
