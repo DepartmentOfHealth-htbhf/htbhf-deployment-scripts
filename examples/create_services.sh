@@ -19,6 +19,8 @@ check_variable_is_set CF_PASS
 check_variable_is_set BASIC_AUTH_USER
 check_variable_is_set BASIC_AUTH_PASS
 check_variable_is_set CF_PUBLIC_DOMAIN # london.cloudapps.digital
+check_variable_is_set LOGIT_ENDPOINT # see https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app
+check_variable_is_set LOGIT_PORT
 
 cf_login
 
@@ -60,3 +62,6 @@ cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP
 cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}
 cd ..
 rm -rf tmp-basic-auth-route
+
+echo "Setting up logit ssl drain"
+cf create-user-provided-service logit-ssl-drain -l syslog-tls://${LOGIT_ENDPOINT}:${LOGIT_PORT}
