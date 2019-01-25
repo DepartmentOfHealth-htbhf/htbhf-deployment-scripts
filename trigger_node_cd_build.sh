@@ -41,7 +41,9 @@ REQUEST_BODY='{
   }
 }'
 
-curl -v -s -X POST \
+echo "Request body: ${REQUEST_BODY}"
+
+curl -s -X POST \
    -H "Content-Type: application/json" \
    -H "Accept: application/json" \
    -H "Travis-API-Version: 3" \
