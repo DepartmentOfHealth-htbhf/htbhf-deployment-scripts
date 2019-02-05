@@ -1,3 +1,5 @@
+.gradle/
+
 ### IntelliJ IDEA ###
 *.iws
 *.iml
