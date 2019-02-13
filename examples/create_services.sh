@@ -22,6 +22,7 @@ check_variable_is_set CF_PUBLIC_DOMAIN # london.cloudapps.digital
 check_variable_is_set LOGIT_ENDPOINT # see https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app
 check_variable_is_set LOGIT_PORT
 check_variable_is_set GA_TRACKING_ID
+check_variable_is_set UI_LOG_LEVEL
 
 cf_login
 
@@ -68,4 +69,4 @@ echo "Setting up logit ssl drain"
 cf create-user-provided-service logit-ssl-drain -l syslog-tls://${LOGIT_ENDPOINT}:${LOGIT_PORT}
 
 echo "Creating service to hold environment variables used by applications"
-cf create-user-provided-service variable-service -p \'{"GA_TRACKING_ID": \"${GA_TRACKING_ID}\"}\'
+cf create-user-provided-service variable-service -p \'{"GA_TRACKING_ID": \"${GA_TRACKING_ID}\", "UI_LOG_LEVEL": \"${UI_LOG_LEVEL}\"}\'
