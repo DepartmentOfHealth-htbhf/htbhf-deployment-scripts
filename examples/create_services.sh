@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # script to provision a new environment (staging, for example)
+# it is assumed that the new space has already been created via the dashboard
 # note that instance sizes might need to be changed
 # this script is not run as part of any automated process - trigger it manually if required
 
@@ -10,7 +11,13 @@ check_variable_is_set(){
         exit 1
     fi
 }
+
+pause(){
+    read -p "Press [Enter] key to continue..."
+}
+
  # check necessary environment variables are set and not empty
+ # please ensure any changes to required variables are also updated in README.md
 check_variable_is_set CF_SPACE
 check_variable_is_set CF_API
 check_variable_is_set CF_ORG
@@ -24,13 +31,47 @@ check_variable_is_set LOGIT_PORT
 check_variable_is_set GA_TRACKING_ID
 check_variable_is_set UI_LOG_LEVEL
 
+source ../cf_deployment_functions.sh
+
 cf_login
 
-echo "Creating service help-to-buy-healthy-foods-redis"
-cf create-service redis tiny-clustered-3.2 help-to-buy-healthy-foods-redis
+if cf service help-to-buy-healthy-foods-redis >/dev/null 2>/dev/null; then
+    echo "help-to-buy-healthy-foods-redis already exists"
+else
+    echo ""
+    PS3="Select the size of the redis service: "
+    redisSizes=("tiny-3.2" "medium-ha-3.2")
+    select redisSize in "${redisSizes[@]}"
+    do
+        case redisSize in
+            *) break;;
+        esac
+    done
 
-echo "Creating service htbhf-claimant-service-postgres"
-cf create-service postgres small-ha-10.5 htbhf-claimant-service-postgres
+    echo "Creating ${redisSize} Redis service help-to-buy-healthy-foods-redis"
+    echo "cf create-service redis ${redisSize} help-to-buy-healthy-foods-redis"
+    cf create-service redis ${redisSize} help-to-buy-healthy-foods-redis
+    pause
+fi
+
+if cf service htbhf-claimant-service-postgres >/dev/null 2>/dev/null; then
+    echo "htbhf-claimant-service-postgres already exists"
+else
+    echo -e "\n"
+    PS3="Select the size of the postgres service: "
+    postgresSizes=("small-10.5" "small-ha-10.5" "medium-10.5" "medium-ha-10.5" "large-10.5" "large-ha-10.5" "xlarge-10.5" "xlarge-ha-10.5")
+    select postgresSize in "${postgresSizes[@]}"
+    do
+        case postgresSize in
+            *) break;;
+        esac
+    done
+
+    echo "Creating ${postgresSize} Postgres service htbhf-claimant-service-postgres"
+    echo "cf create-service postgres ${postgresSize} htbhf-claimant-service-postgres"
+    cf create-service postgres ${postgresSize} htbhf-claimant-service-postgres
+    pause
+fi
 
 # if we're in production then the web ui will have no environment suffix
 SPACE_SUFFIX="-${CF_SPACE}"
@@ -45,28 +86,56 @@ if [[ -z ${EXISTING_WEB_UI} ]]; then
 	echo "Creating holding page application '${WEB_UI_APP_NAME}' in order to apply basic auth route"
 	mkdir tmp-holding-page
 	cd tmp-holding-page
-	echo "<html>\n<head>\n<title>${WEB_UI_APP_NAME}</title>\n</head>\n<body>\n<p>Temporary holding page</p>\n</body>\n</html>" > index.html
-	echo "---\napplications:\n- name: ${WEB_UI_APP_NAME}\n  memory: 64M\n  buildpack: staticfile_buildpack" > manifest.yml
+	echo -e "<html>\n<head>\n<title>${WEB_UI_APP_NAME}</title>\n</head>\n<body>\n<p>Temporary holding page</p>\n</body>\n</html>" > index.html
+	echo -e "---\napplications:\n- name: ${WEB_UI_APP_NAME}\n  memory: 64M\n  buildpack: staticfile_buildpack" > manifest.yml
 	cf push
 	cd ..
 	rm -rf tmp-holding-page
+    pause
+else
+    echo "${WEB_UI_APP_NAME} already exists (this may be a holding page)"
 fi
 
-echo "Creating route to secure web ui with basic auth"
-mkdir tmp-basic-auth-route
-cd tmp-basic-auth-route
-git clone https://github.com/alext/cf_basic_auth_route_service .
-cf push ${WEB_UI_APP_NAME}-route --no-start
-cf set-env ${WEB_UI_APP_NAME}-route AUTH_USERNAME ${BASIC_AUTH_USER}
-cf set-env ${WEB_UI_APP_NAME}-route AUTH_PASSWORD ${BASIC_AUTH_PASS}
-cf start ${WEB_UI_APP_NAME}-route
-cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP_NAME}-route.${CF_PUBLIC_DOMAIN}
-cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}
-cd ..
-rm -rf tmp-basic-auth-route
+EXISTING_ROUTE=$(cf routes | grep "${WEB_UI_APP_NAME}-route ")
+if [[ -z ${EXISTING_WEB_UI} ]]; then
+    echo "Creating route to secure web ui with basic auth"
+    mkdir tmp-basic-auth-route
+    cd tmp-basic-auth-route
+    git clone https://github.com/alext/cf_basic_auth_route_service .
+    cf push ${WEB_UI_APP_NAME}-route --no-start
+    cf set-env ${WEB_UI_APP_NAME}-route AUTH_USERNAME ${BASIC_AUTH_USER}
+    cf set-env ${WEB_UI_APP_NAME}-route AUTH_PASSWORD ${BASIC_AUTH_PASS}
+    cf start ${WEB_UI_APP_NAME}-route
+    echo "cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP_NAME}-route.${CF_PUBLIC_DOMAIN}"
+    cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP_NAME}-route.${CF_PUBLIC_DOMAIN}
+    echo "cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}"
+    cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}
+    cd ..
+    rm -rf tmp-basic-auth-route
+    pause
+else
+    echo "${WEB_UI_APP_NAME}-route already exists"
+fi
 
-echo "Setting up logit ssl drain"
-cf create-user-provided-service logit-ssl-drain -l syslog-tls://${LOGIT_ENDPOINT}:${LOGIT_PORT}
+if cf service logit-ssl-drain >/dev/null 2>/dev/null; then
+    echo "logit-ssl-drain already exists"
+else
+    echo "Setting up logit ssl drain"
+    echo "cf create-user-provided-service logit-ssl-drain -l syslog-tls://${LOGIT_ENDPOINT}:${LOGIT_PORT}"
+    cf create-user-provided-service logit-ssl-drain -l syslog-tls://${LOGIT_ENDPOINT}:${LOGIT_PORT}
+    pause
+fi
 
-echo "Creating service to hold environment variables used by applications"
-cf create-user-provided-service variable-service -p \'{"GA_TRACKING_ID": \"${GA_TRACKING_ID}\", "UI_LOG_LEVEL": \"${UI_LOG_LEVEL}\"}\'
+if cf service variable-service >/dev/null 2>/dev/null; then
+    echo "variable-service already exists"
+else
+    echo "Setting up variable service to provide environment variables to apps"
+    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"}'"
+    # for some reason this cf command doesn't run correctly when invoked directly (something about the combination of quote marks, I suspect)
+    # but we can write it to a script and source that script instead
+    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"}'" > tmp-variable-service.sh
+    source tmp-variable-service.sh
+    rm tmp-variable-service.sh
+fi
+
+echo "Done"
