@@ -10,6 +10,7 @@ check_variable_is_set(){
 check_variable_is_set BINTRAY_ROOT_URL
 check_variable_is_set APP_NAME
 check_variable_is_set CF_DOMAIN
+check_variable_is_set TRAVIS_AUTH_TOKEN
 
 # version has already been incremented for the next build, so previousVersion is the version of the build just created.
 VERSION=`cat version.properties | grep "previousVersion" | cut -d'=' -f2`
