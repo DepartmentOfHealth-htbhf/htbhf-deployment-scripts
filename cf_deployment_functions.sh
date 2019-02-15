@@ -29,6 +29,7 @@ perform_first_time_deployment() {
     echo "cf push failed - exiting now"
     exit 1
   fi
+  scale_instances ${SPACE_SUFFIX}
   add_network_polices ${SPACE_SUFFIX}
 
   create_random_route_name
@@ -64,6 +65,7 @@ perform_blue_green_deployment() {
     echo "cf push failed - exiting now"
     exit 1
   fi
+  scale_instances ${SPACE_SUFFIX}-green
   add_network_polices ${SPACE_SUFFIX}-green
 
   echo "# creating a temporary (public) route to the green app"
@@ -109,6 +111,31 @@ set_app_version_environment_variable() {
   cf set-env ${APP_FULL_NAME} APP_VERSION "${APP_VERSION}"
 }
 
+scale_instances() {
+  suffix=$1
+  appname="${APP_NAME}${suffix}"
+  filename="${SCRIPT_DIR}/instance-sizes-${CF_SPACE}.properties"
+  if [ -f "${filename}" ]; then
+    cat ${filename} | grep ${APP_NAME} | while read instances
+    do
+      sizing=$(echo ${instances} | cut -d= -f2)
+
+      echo "cf scale ${appname} ${sizing} -f"
+      cf scale ${appname} ${sizing} -f
+      RESULT=$?
+      if [[ ${RESULT} != 0 ]]; then
+        echo "cf scale failed - exiting now"
+        exit 1
+      fi
+
+    done
+
+  else
+    echo "${filename} does not exist - not scaling the app (will have the instance count/size defined in the manifest.yml file)"
+  fi
+
+}
+
 add_network_polices() {
   suffix=$1
   cat ${SCRIPT_DIR}/network-policies.properties | grep ${APP_NAME} | while read route
@@ -133,5 +160,5 @@ add_network_polices() {
     cf add-network-policy ${src} --destination-app ${dest} --protocol tcp --port 8080
   done
 
-  echo "Finished creating network polices"
+  echo "Finished creating network policies"
 }

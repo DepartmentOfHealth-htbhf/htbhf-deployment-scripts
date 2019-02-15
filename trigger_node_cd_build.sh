@@ -9,6 +9,7 @@ check_variable_is_set(){
 
 check_variable_is_set APP_NAME
 check_variable_is_set CF_DOMAIN
+check_variable_is_set TRAVIS_AUTH_TOKEN
 
 # get current version from package.json.
 VERSION=$(sed -nE 's/^[ \\t]*"version": "([0-9]{1,}\.[0-9]{1,}\.[0-9x]{1,})",$/\1/p' package.json;)
