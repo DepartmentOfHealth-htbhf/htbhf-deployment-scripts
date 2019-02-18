@@ -7,7 +7,7 @@
 
 check_variable_is_set(){
     if [[ -z ${!1} ]]; then
-        echo "$1 must be set and non empty"
+        echo "$1 must be set and non empty. ($2)"
         exit 1
     fi
 }
