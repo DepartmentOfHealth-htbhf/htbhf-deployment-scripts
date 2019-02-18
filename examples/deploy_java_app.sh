@@ -8,7 +8,7 @@ check_variable_is_set(){
 }
 
 check_variable_is_set APP_NAME "The name of the application to deploy. E.g. 'htbhf-claimant-service'"
-check_variable_is_set APP_VERSION "The version to deploy"
+check_variable_is_set APP_VERSION "The version to deploy. Should match the version number in Bintray, and exclude any leading 'v'."
 check_variable_is_set TRAVIS_AUTH_TOKEN "The Travis-ci token. Available from travis-ci.com in my account -> settings."
 
 GITHUB_REPO_SLUG=DepartmentOfHealth-htbhf/${APP_NAME}

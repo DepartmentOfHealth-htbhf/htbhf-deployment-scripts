@@ -8,7 +8,7 @@ check_variable_is_set(){
 }
 
 check_variable_is_set APP_NAME "The name of the application as deployed. E.g. 'help-to-buy-healthy-foods'"
-check_variable_is_set APP_VERSION "The version to deploy"
+check_variable_is_set APP_VERSION "The version to deploy. Should match the version in Github, but exclude the leading 'v'."
 check_variable_is_set REPO_NAME "The name of the project in github. E.g. 'htbhf-applicant-web-ui'"
 check_variable_is_set TRAVIS_AUTH_TOKEN "The Travis-ci token. Available from travis-ci.com in my account -> settings."
 

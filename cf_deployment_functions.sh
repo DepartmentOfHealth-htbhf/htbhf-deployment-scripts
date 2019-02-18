@@ -22,7 +22,7 @@ remove_route() {
 perform_first_time_deployment() {
   echo "$APP_FULL_NAME does not exist, doing regular deployment"
 
-  cf push -p ${APP_PATH} --var app-suffix=${SPACE_SUFFIX}-green --var space-suffix=${SPACE_SUFFIX} --var session_secret="secret_${SESSION_SECRET}"
+  cf push -p ${APP_PATH} --var app-suffix=${SPACE_SUFFIX}-green --var space-suffix="${SPACE_SUFFIX}" --var session_secret="secret_${SESSION_SECRET}"
   RESULT=$?
   if [[ ${RESULT} != 0 ]]; then
     cf logs ${APP_FULL_NAME} --recent
@@ -58,7 +58,7 @@ perform_blue_green_deployment() {
   GREEN_APP="${APP_FULL_NAME}-green"
 
   echo "# pushing new (green) app without a route"
-  cf push -p ${APP_PATH} --var app-suffix=${SPACE_SUFFIX}-green --var space-suffix=${SPACE_SUFFIX} --var session_secret="secret_${SESSION_SECRET}" --no-route
+  cf push -p ${APP_PATH} --var app-suffix=${SPACE_SUFFIX}-green --var space-suffix="${SPACE_SUFFIX}" --var session_secret="secret_${SESSION_SECRET}" --no-route
   RESULT=$?
   if [[ ${RESULT} != 0 ]]; then
     cf logs ${GREEN_APP} --recent
