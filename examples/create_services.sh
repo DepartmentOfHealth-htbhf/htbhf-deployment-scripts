@@ -18,18 +18,18 @@ pause(){
 
  # check necessary environment variables are set and not empty
  # please ensure any changes to required variables are also updated in README.md
-check_variable_is_set CF_SPACE
-check_variable_is_set CF_API
-check_variable_is_set CF_ORG
-check_variable_is_set CF_USER
-check_variable_is_set CF_PASS
-check_variable_is_set BASIC_AUTH_USER
-check_variable_is_set BASIC_AUTH_PASS
-check_variable_is_set CF_PUBLIC_DOMAIN # london.cloudapps.digital
-check_variable_is_set LOGIT_ENDPOINT # see https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app
-check_variable_is_set LOGIT_PORT
-check_variable_is_set GA_TRACKING_ID
-check_variable_is_set UI_LOG_LEVEL
+check_variable_is_set CF_SPACE "The name of the space to set up services for"
+check_variable_is_set CF_API "E.g. api.london.cloud.service.gov.uk"
+check_variable_is_set CF_ORG "E.g. department-of-health-and-social-care)"
+check_variable_is_set CF_USER "Your cloudfoundry username/email address"
+check_variable_is_set CF_PASS "Your cloudfoundry password"
+check_variable_is_set BASIC_AUTH_USER "Username for basic authentication of the applicant web ui"
+check_variable_is_set BASIC_AUTH_PASS "Password for basic authentication of the applicant web ui"
+check_variable_is_set CF_PUBLIC_DOMAIN "E.g. london.cloudapps.digital"
+check_variable_is_set LOGIT_ENDPOINT "See https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app"
+check_variable_is_set LOGIT_PORT "See https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app"
+check_variable_is_set GA_TRACKING_ID "The google analytics tracking id"
+check_variable_is_set UI_LOG_LEVEL "E.g. info"
 
 source ../cf_deployment_functions.sh
 
@@ -99,6 +99,7 @@ fi
 EXISTING_ROUTE=$(cf routes | grep "${WEB_UI_APP_NAME}-route ")
 if [[ -z ${EXISTING_WEB_UI} ]]; then
     echo "Creating route to secure web ui with basic auth"
+    # see https://docs.cloud.service.gov.uk/deploying_services/route_services/#example-route-service-to-add-authentication
     mkdir tmp-basic-auth-route
     cd tmp-basic-auth-route
     git clone https://github.com/alext/cf_basic_auth_route_service .
