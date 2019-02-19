@@ -107,10 +107,11 @@ perform_blue_green_deployment() {
 }
 
 write_tmp_vars_file() {
-  app_suffix=$1
+  app_suffix=${1:-'""'}
+  space_suffix=${SPACE_SUFFIX:-'""'}
   echo "---" > ${TMP_VARS_FILE}
   echo "app-suffix: ${app_suffix}" >> ${TMP_VARS_FILE}
-  echo "space-suffix: ${SPACE_SUFFIX}" >> ${TMP_VARS_FILE}
+  echo "space-suffix: ${space_suffix}" >> ${TMP_VARS_FILE}
   echo "session_secret: secret_${SESSION_SECRET}" >> ${TMP_VARS_FILE}
 }
 
