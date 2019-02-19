@@ -31,7 +31,7 @@ REQUEST_BODY='{
         "MANIFEST_URL": "'${MANIFEST_URL}'",
         "APP_NAME": "'${APP_NAME}'",
         "APP_VERSION": "'${APP_VERSION}'",
-        "CF_DOMAIN": "london.cloudapps.digital"
+        "CF_DOMAIN": "apps.internal"
       },
       "script": "cd_scripts/run.sh"
     }
