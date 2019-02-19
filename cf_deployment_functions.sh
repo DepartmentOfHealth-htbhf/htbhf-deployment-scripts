@@ -24,7 +24,7 @@ remove_route() {
 perform_first_time_deployment() {
   echo "$APP_FULL_NAME does not exist, doing regular deployment"
 
-  write_tmp_vars_file
+  write_tmp_vars_file ${SPACE_SUFFIX}
   cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE}
   RESULT=$?
   rm ${TMP_VARS_FILE}
@@ -62,7 +62,7 @@ perform_blue_green_deployment() {
   GREEN_APP="${APP_FULL_NAME}-green"
 
   echo "# pushing new (green) app without a route"
-  write_tmp_vars_file
+  write_tmp_vars_file ${SPACE_SUFFIX}-green
   cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE} --no-route
   RESULT=$?
   rm ${TMP_VARS_FILE}
@@ -107,8 +107,9 @@ perform_blue_green_deployment() {
 }
 
 write_tmp_vars_file() {
+  app_suffix=$1
   echo "---" > ${TMP_VARS_FILE}
-  echo "app-suffix: ${SPACE_SUFFIX}-green" >> ${TMP_VARS_FILE}
+  echo "app-suffix: ${app_suffix}" >> ${TMP_VARS_FILE}
   echo "space-suffix: ${SPACE_SUFFIX}" >> ${TMP_VARS_FILE}
   echo "session_secret: secret_${SESSION_SECRET}" >> ${TMP_VARS_FILE}
 }

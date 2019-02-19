@@ -25,18 +25,17 @@ check_variable_is_set SMOKE_TESTS "The script to run to confirm that the applica
 
 source ${SCRIPT_DIR}/cf_deployment_functions.sh
 
-APP_FULL_NAME="$APP_NAME-$CF_SPACE"
-
 cf_login
-
-echo "Deploying $APP_FULL_NAME to $CF_SPACE from $APP_PATH"
 
 SPACE_SUFFIX="-${CF_SPACE}"
 if [[ ${CF_SPACE} == 'production' ]]; then
 	SPACE_SUFFIX=''
 fi
-
 export SPACE_SUFFIX
+
+APP_FULL_NAME="${APP_NAME}${SPACE_SUFFIX}"
+
+echo "Deploying $APP_FULL_NAME to $CF_SPACE from $APP_PATH"
 
 # if the app already exists, perform a blue green deployment, if not then a regular deployment
 if cf app ${APP_FULL_NAME} >/dev/null 2>/dev/null; then
