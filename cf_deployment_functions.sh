@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export TMP_VARS_FILE="tmp-vars.yml"
+
 cf_login() {
   echo "Logging into cloud foundry with api:$CF_API, org:$CF_ORG, space:$CF_SPACE, user:$CF_USER"
   cf login -a ${CF_API} -u ${CF_USER} -p "${CF_PASS}" -s ${CF_SPACE} -o ${CF_ORG}
@@ -22,8 +24,10 @@ remove_route() {
 perform_first_time_deployment() {
   echo "$APP_FULL_NAME does not exist, doing regular deployment"
 
-  cf push -p ${APP_PATH} --var app-suffix=${SPACE_SUFFIX}-green --var space-suffix="${SPACE_SUFFIX}" --var session_secret="secret_${SESSION_SECRET}"
+  write_tmp_vars_file
+  cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE}
   RESULT=$?
+  rm ${TMP_VARS_FILE}
   if [[ ${RESULT} != 0 ]]; then
     cf logs ${APP_FULL_NAME} --recent
     echo "cf push failed - exiting now"
@@ -58,8 +62,10 @@ perform_blue_green_deployment() {
   GREEN_APP="${APP_FULL_NAME}-green"
 
   echo "# pushing new (green) app without a route"
-  cf push -p ${APP_PATH} --var app-suffix=${SPACE_SUFFIX}-green --var space-suffix="${SPACE_SUFFIX}" --var session_secret="secret_${SESSION_SECRET}" --no-route
+  write_tmp_vars_file
+  cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE} --no-route
   RESULT=$?
+  rm ${TMP_VARS_FILE}
   if [[ ${RESULT} != 0 ]]; then
     cf logs ${GREEN_APP} --recent
     echo "cf push failed - exiting now"
@@ -98,6 +104,13 @@ perform_blue_green_deployment() {
   cf rename ${GREEN_APP} ${BLUE_APP}
 
   set_app_version_environment_variable
+}
+
+write_tmp_vars_file() {
+  echo "---" > ${TMP_VARS_FILE}
+  echo "app-suffix: ${SPACE_SUFFIX}-green" >> ${TMP_VARS_FILE}
+  echo "space-suffix: ${SPACE_SUFFIX}" >> ${TMP_VARS_FILE}
+  echo "session_secret: secret_${SESSION_SECRET}" >> ${TMP_VARS_FILE}
 }
 
 unmap_blue_route() {
