@@ -24,6 +24,25 @@ In order to allow communications between apps in CloudFoundry we must explicitly
 This is handled by the deployment scripts, for each pair of applications listed in `network-policies.properties` (in this project).
 Refer to the comments in `network-policies.properties` for more information on the format.
 
+
+### Instance counts and sizes
+If there exists an instance-sizes properties file for the CloudFoundry space being deployed to 
+(e.g. [instance-sizes-staging.properties](instance-sizes-staging.properties))
+then the app will be scaled accordingly after deployment (and before smoke tests are performed).
+The filename is in the format `instance-sizes-<SPACE>.properties`, while the file itself should have the following format:
+```
+# app_name=<instance size info>
+# where <instance size info> matches the format for instance sizing in the `cf scale` command [square brackets indicate optional data]:
+#   [-i INSTANCES] [-k DISK] [-m MEMORY]
+# It is important that app_name reflects the name of the app in the manifest (excluding any `((suffix))` ).
+# for instance
+my-app-name=-i 3 -m 1G
+# will scale my-app-name to 3 instances, each with 1GB memory. Do not include the '-f' flag as this will be appended automatically
+
+```
+If no such properties file exists for a space, or does not mention the app being deployed, the app will retain the counts and sizes defined in its manifest file.
+
+
 ### Environment variables
 These scripts require the following environment variables to be set:
 
