@@ -71,6 +71,11 @@ else
     echo "cf create-service postgres ${postgresSize} htbhf-claimant-service-postgres"
     cf create-service postgres ${postgresSize} htbhf-claimant-service-postgres
     pause
+
+    echo "Setting the preferred maintenance window to every Sunday, 3:00 am to 3:30 am"
+    echo "cf update-service htbhf-claimant-service-postgres -c '{"preferred_maintenance_window": "Sun:03:00-Sun:03:30"}'"
+    cf update-service htbhf-claimant-service-postgres -c '{"preferred_maintenance_window": "Sun:03:00-Sun:03:30"}'
+    pause
 fi
 
 # if we're in production then the web ui will have no environment suffix
