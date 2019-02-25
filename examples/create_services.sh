@@ -136,6 +136,8 @@ if cf service variable-service >/dev/null 2>/dev/null; then
     echo "variable-service already exists"
 else
     echo "Setting up variable service to provide environment variables to apps"
+    # variables that are required: GA_TRACKING_ID
+    # optional variables: UI_LOG_LEVEL, claimant-root-loglevel, claimant-app-loglevel
     echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"}'"
     # for some reason this cf command doesn't run correctly when invoked directly (something about the combination of quote marks, I suspect)
     # but we can write it to a script and source that script instead
