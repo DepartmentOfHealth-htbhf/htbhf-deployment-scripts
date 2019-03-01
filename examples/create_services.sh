@@ -5,24 +5,15 @@
 # note that instance sizes might need to be changed
 # this script is not run as part of any automated process - trigger it manually if required
 
-check_variable_is_set(){
-    if [[ -z ${!1} ]]; then
-        echo "$1 must be set and non empty. ($2)"
-        exit 1
-    fi
-}
-
 pause(){
     read -p "Press [Enter] key to continue..."
 }
 
+source ../cf_deployment_functions.sh
+
  # check necessary environment variables are set and not empty
  # please ensure any changes to required variables are also updated in README.md
-check_variable_is_set CF_SPACE "The name of the space to set up services for"
-check_variable_is_set CF_API "E.g. api.london.cloud.service.gov.uk"
-check_variable_is_set CF_ORG "E.g. department-of-health-and-social-care)"
-check_variable_is_set CF_USER "Your cloudfoundry username/email address"
-check_variable_is_set CF_PASS "Your cloudfoundry password"
+check_login_variables_are_set
 check_variable_is_set BASIC_AUTH_USER "Username for basic authentication of the applicant web ui"
 check_variable_is_set BASIC_AUTH_PASS "Password for basic authentication of the applicant web ui"
 check_variable_is_set CF_PUBLIC_DOMAIN "E.g. london.cloudapps.digital"
@@ -31,7 +22,6 @@ check_variable_is_set LOGIT_PORT "See https://docs.cloud.service.gov.uk/monitori
 check_variable_is_set GA_TRACKING_ID "The google analytics tracking id"
 check_variable_is_set UI_LOG_LEVEL "E.g. info"
 
-source ../cf_deployment_functions.sh
 
 cf_login
 
