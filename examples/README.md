@@ -19,10 +19,3 @@
     UI_LOG_LEVEL=info (can be silly|debug|info|warn|error)
     ```
     * To run this script you must clone this repository then `cd examples; bash ./create_services.sh`.
-
-## Deploying applications to staging and production
-There are scripts to trigger the CD pipeline to deploy a specific version of an application to production (via staging).
-These scripts are `trigger_cd_to_deploy_[node|java]_app.sh` - see individual scripts for instructions on what environment variables are required.
-The scripts will deploy to staging then deploy straight to production (assuming a successful deploy to staging) without running any tests.
-
-There is an additional script to run tests in staging without deploying any applications: `trigger_cd_to_run_tests.sh`

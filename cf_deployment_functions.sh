@@ -2,6 +2,21 @@
 
 export TMP_VARS_FILE="tmp-vars.yml"
 
+check_login_variables_are_set() {
+  check_variable_is_set CF_SPACE "The name of the space to set up services for"
+  check_variable_is_set CF_API "E.g. api.london.cloud.service.gov.uk"
+  check_variable_is_set CF_ORG "E.g. department-of-health-and-social-care)"
+  check_variable_is_set CF_USER "Your cloudfoundry username/email address"
+  check_variable_is_set CF_PASS "Your cloudfoundry password"
+}
+
+check_variable_is_set(){
+    if [[ -z ${!1} ]]; then
+        echo "$1 must be set and non empty. ($2)"
+        exit 1
+    fi
+}
+
 cf_login() {
   echo "Logging into cloud foundry with api:$CF_API, org:$CF_ORG, space:$CF_SPACE, user:$CF_USER"
   cf login -a ${CF_API} -u ${CF_USER} -p "${CF_PASS}" -s ${CF_SPACE} -o ${CF_ORG}
