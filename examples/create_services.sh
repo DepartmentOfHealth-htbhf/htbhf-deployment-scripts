@@ -48,8 +48,8 @@ if cf service htbhf-claimant-service-postgres >/dev/null 2>/dev/null; then
     echo "htbhf-claimant-service-postgres already exists"
 else
     echo -e "\n"
-    PS3="Select the size of the postgres service: "
-    postgresSizes=("small-10.5" "small-ha-10.5" "medium-10.5" "medium-ha-10.5" "large-10.5" "large-ha-10.5" "xlarge-10.5" "xlarge-ha-10.5")
+    PS3="Select the size of the htbhf-claimant-service postgres service: "
+    postgresSizes=("small-10" "small-ha-10" "medium-10" "medium-ha-10" "large-10" "large-ha-10" "xlarge-10" "xlarge-ha-10")
     select postgresSize in "${postgresSizes[@]}"
     do
         case postgresSize in
@@ -62,9 +62,31 @@ else
     cf create-service postgres ${postgresSize} htbhf-claimant-service-postgres
     pause
 
-    echo "Setting the preferred maintenance window to every Sunday, 3:00 am to 3:30 am"
+    echo "Once create is complete you should set the preferred maintenance window as follows:"
     echo "cf update-service htbhf-claimant-service-postgres -c '{"preferred_maintenance_window": "Sun:03:00-Sun:03:30"}'"
-    cf update-service htbhf-claimant-service-postgres -c '{"preferred_maintenance_window": "Sun:03:00-Sun:03:30"}'
+    pause
+fi
+
+if cf service htbhf-eligibility-api-postgres >/dev/null 2>/dev/null; then
+    echo "htbhf-eligibility-api-postgres already exists"
+else
+    echo -e "\n"
+    PS3="Select the size of the htbhf-eligibility-api postgres service: "
+    postgresSizes=("small-10" "small-ha-10" "medium-10" "medium-ha-10" "large-10" "large-ha-10" "xlarge-10" "xlarge-ha-10")
+    select postgresSize in "${postgresSizes[@]}"
+    do
+        case postgresSize in
+            *) break;;
+        esac
+    done
+
+    echo "Creating ${postgresSize} Postgres service htbhf-eligibility-api-postgres"
+    echo "cf create-service postgres ${postgresSize} htbhf-eligibility-api-postgres"
+    cf create-service postgres ${postgresSize} htbhf-eligibility-api-postgres
+    pause
+
+    echo "Once create is complete you should set the preferred maintenance window as follows:"
+    echo "cf update-service htbhf-eligibility-api-postgres -c '{"preferred_maintenance_window": "Sun:03:00-Sun:03:30"}'"
     pause
 fi
 
