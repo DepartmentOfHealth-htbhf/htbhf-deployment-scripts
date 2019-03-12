@@ -63,7 +63,7 @@ else
     pause
 
     echo "Once create is complete you should set the preferred maintenance window as follows:"
-    echo "cf update-service htbhf-claimant-service-postgres -c '{"preferred_maintenance_window": "Sun:03:00-Sun:03:30"}'"
+    echo "cf update-service htbhf-claimant-service-postgres -c '{\"preferred_maintenance_window\": \"Sun:03:00-Sun:03:30\"}'"
     pause
 fi
 
@@ -86,7 +86,7 @@ else
     pause
 
     echo "Once create is complete you should set the preferred maintenance window as follows:"
-    echo "cf update-service htbhf-eligibility-api-postgres -c '{"preferred_maintenance_window": "Sun:03:00-Sun:03:30"}'"
+    echo "cf update-service htbhf-eligibility-api-postgres -c '{\"preferred_maintenance_window\": \"Sun:03:00-Sun:03:30\"}'"
     pause
 fi
 
