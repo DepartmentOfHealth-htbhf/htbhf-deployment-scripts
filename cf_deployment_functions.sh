@@ -40,6 +40,7 @@ perform_first_time_deployment() {
   echo "$APP_FULL_NAME does not exist, doing regular deployment"
 
   write_tmp_vars_file ${SPACE_SUFFIX}
+  echo "cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE}"
   cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE}
   RESULT=$?
   rm ${TMP_VARS_FILE}
@@ -77,6 +78,7 @@ perform_blue_green_deployment() {
 
   echo "# pushing new (green) app without a route"
   write_tmp_vars_file ${SPACE_SUFFIX}-green
+  echo "cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE} --no-route"
   cf push -p ${APP_PATH} --vars-file ${TMP_VARS_FILE} --no-route
   RESULT=$?
   rm ${TMP_VARS_FILE}
