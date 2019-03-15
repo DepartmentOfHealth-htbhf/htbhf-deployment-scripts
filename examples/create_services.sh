@@ -21,7 +21,7 @@ check_variable_is_set LOGIT_ENDPOINT "See https://docs.cloud.service.gov.uk/moni
 check_variable_is_set LOGIT_PORT "See https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app"
 check_variable_is_set GA_TRACKING_ID "The google analytics tracking id"
 check_variable_is_set UI_LOG_LEVEL "E.g. info"
-
+check_variable_is_set DWP_API_URI "E.g. test.london.cloudapps.digital"
 
 cf_login
 
@@ -153,7 +153,7 @@ else
     echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"}'"
     # for some reason this cf command doesn't run correctly when invoked directly (something about the combination of quote marks, I suspect)
     # but we can write it to a script and source that script instead
-    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"}'" > tmp-variable-service.sh
+    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\", \"DWP_API_URI\": \"${DWP_API_URI}\"}'" > tmp-variable-service.sh
     source tmp-variable-service.sh
     rm tmp-variable-service.sh
 fi
