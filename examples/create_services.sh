@@ -22,6 +22,7 @@ check_variable_is_set LOGIT_PORT "See https://docs.cloud.service.gov.uk/monitori
 check_variable_is_set GA_TRACKING_ID "The google analytics tracking id"
 check_variable_is_set UI_LOG_LEVEL "E.g. info"
 check_variable_is_set DWP_API_URI "E.g. test.london.cloudapps.digital"
+check_variable_is_set HMRC_API_URI "E.g. test.london.cloudapps.digital"
 
 cf_login
 
@@ -150,10 +151,12 @@ else
     echo "Setting up variable service to provide environment variables to apps"
     # variables that are required: GA_TRACKING_ID
     # optional variables: UI_LOG_LEVEL, claimant-root-loglevel, claimant-app-loglevel
-    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"}'"
+    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"},
+    \"DWP_API_URI\": \"${DWP_API_URI}\"} ,\"HMRC_API_URI\": \"${HMRC_API_URI}\"}'"
     # for some reason this cf command doesn't run correctly when invoked directly (something about the combination of quote marks, I suspect)
     # but we can write it to a script and source that script instead
-    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\", \"DWP_API_URI\": \"${DWP_API_URI}\"}'" > tmp-variable-service.sh
+    echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\",
+     \"DWP_API_URI\": \"${DWP_API_URI}\", \"HMRC_API_URI\": \"${HMRC_API_URI}\"}'" > tmp-variable-service.sh
     source tmp-variable-service.sh
     rm tmp-variable-service.sh
 fi
