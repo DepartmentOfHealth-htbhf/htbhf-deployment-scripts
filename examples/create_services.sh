@@ -121,7 +121,7 @@ if [[ -z ${EXISTING_WEB_UI} ]]; then
     mkdir tmp-basic-auth-route
     cd tmp-basic-auth-route
     git clone https://github.com/alext/cf_basic_auth_route_service .
-    cf push ${WEB_UI_APP_NAME}-route --no-start
+    cf push ${WEB_UI_APP_NAME}-route --no-start -s cflinuxfs3
     cf set-env ${WEB_UI_APP_NAME}-route AUTH_USERNAME ${BASIC_AUTH_USER}
     cf set-env ${WEB_UI_APP_NAME}-route AUTH_PASSWORD ${BASIC_AUTH_PASS}
     cf start ${WEB_UI_APP_NAME}-route
