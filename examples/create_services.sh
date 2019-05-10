@@ -152,11 +152,11 @@ else
     # variables that are required: GA_TRACKING_ID
     # optional variables: UI_LOG_LEVEL, claimant-root-loglevel, claimant-app-loglevel
     echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\"},
-    \"DWP_API_URI\": \"${DWP_API_URI}\"} ,\"HMRC_API_URI\": \"${HMRC_API_URI}\"}'"
+    \"DWP_API_URI\": \"${DWP_API_URI}\"} ,\"HMRC_API_URI\": \"${HMRC_API_URI}\", \"CARD_SERVICES_API_URI\": \"${CARD_SERVICES_API_URI}\"}'"
     # for some reason this cf command doesn't run correctly when invoked directly (something about the combination of quote marks, I suspect)
     # but we can write it to a script and source that script instead
     echo "cf create-user-provided-service variable-service -p '{\"GA_TRACKING_ID\": \"${GA_TRACKING_ID}\", \"UI_LOG_LEVEL\": \"${UI_LOG_LEVEL}\",
-     \"DWP_API_URI\": \"${DWP_API_URI}\", \"HMRC_API_URI\": \"${HMRC_API_URI}\"}'" > tmp-variable-service.sh
+     \"DWP_API_URI\": \"${DWP_API_URI}\", \"HMRC_API_URI\": \"${HMRC_API_URI}\", \"CARD_SERVICES_API_URI\": \"${CARD_SERVICES_API_URI}\"}'" > tmp-variable-service.sh
     source tmp-variable-service.sh
     rm tmp-variable-service.sh
 fi
