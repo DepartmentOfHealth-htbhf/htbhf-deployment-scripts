@@ -14,6 +14,7 @@ COMMIT_MESSAGE="Manual run of tests"
 REQUEST_BODY='{
   "request": {
     "branch": "master",
+    "message": "'${COMMIT_MESSAGE}'",
     "config": {
       "env": {
         "RUN_COMPATIBILITY_TESTS": "true",
