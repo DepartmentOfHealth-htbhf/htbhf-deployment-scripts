@@ -23,6 +23,7 @@ COMMIT_MESSAGE=$(echo -e "${TRAVIS_COMMIT_MESSAGE}" | tr -d '\n\r')
 REQUEST_BODY='{
   "request": {
     "branch": "master",
+    "message": "'${COMMIT_MESSAGE}'",
     "config": {
       "env": {
         "RUN_COMPATIBILITY_TESTS": "'${RUN_COMPATIBILITY_TESTS}'",

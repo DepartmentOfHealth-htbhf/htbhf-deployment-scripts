@@ -20,6 +20,7 @@ COMMIT_MESSAGE="Manual deployment of ${APP_NAME} ${APP_VERSION}"
 REQUEST_BODY='{
   "request": {
     "branch": "master",
+    "message": "'${COMMIT_MESSAGE}'",
     "config": {
       "env": {
         "RUN_COMPATIBILITY_TESTS": "false",
