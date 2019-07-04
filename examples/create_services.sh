@@ -23,6 +23,7 @@ check_variable_is_set GA_TRACKING_ID "The google analytics tracking id"
 check_variable_is_set UI_LOG_LEVEL "E.g. info"
 check_variable_is_set DWP_API_URI "E.g. test.london.cloudapps.digital"
 check_variable_is_set HMRC_API_URI "E.g. test.london.cloudapps.digital"
+check_variable_is_set NOTIFY_API_KEY "E.g. f4d5901f-a308-4aa1-a507-cbace83a3bbd"
 
 cf_login
 
@@ -159,6 +160,16 @@ else
      \"DWP_API_URI\": \"${DWP_API_URI}\", \"HMRC_API_URI\": \"${HMRC_API_URI}\", \"CARD_SERVICES_API_URI\": \"${CARD_SERVICES_API_URI}\"}'" > tmp-variable-service.sh
     source tmp-variable-service.sh
     rm tmp-variable-service.sh
+fi
+
+if cf service notify-variable-service >/dev/null 2>/dev/null; then
+    echo "notify-variable-service already exists"
+else
+  echo "Setting up notify variable service to provide notify api key to apps"
+  echo "cf create-user-provided-service notify-variable-service -p '{\"NOTIFY_API_KEY\": \"${NOTIFY_API_KEY}\"}'"
+  echo "cf create-user-provided-service notify-variable-service -p '{\"NOTIFY_API_KEY\": \"${NOTIFY_API_KEY}\"}'" > tmp-notify-variable-service.sh
+  source tmp-notify-variable-service.sh
+  rm tmp-notify-variable-service.sh
 fi
 
 echo "Done"
