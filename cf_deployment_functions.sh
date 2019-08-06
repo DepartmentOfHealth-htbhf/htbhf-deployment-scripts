@@ -116,12 +116,25 @@ perform_blue_green_deployment() {
 
   echo "# start routing traffic to green (in addition to blue)"
   cf map-route ${GREEN_APP} ${CF_DOMAIN} --hostname ${APP_FULL_NAME}
+  RESULT=$?
+  # roll back if map-route failed
+  if [[ ${RESULT} != 0 ]]; then
+    echo "# map-route failed, rolling back deployment of $GREEN_APP"
+    cf delete -f -r ${GREEN_APP}
+    exit 1
+  fi
+
   echo "# stop routing traffic to blue"
   unmap_blue_route
   echo "# delete blue"
   cf delete -f ${BLUE_APP}
   echo "# rename green -> blue"
   cf rename ${GREEN_APP} ${BLUE_APP}
+  RESULT=$?
+  if [[ ${RESULT} != 0 ]]; then
+    echo "# rename of $GREEN_APP to $BLUE_APP failed! Manual rename required"
+    exit 1
+  fi
 }
 
 write_tmp_vars_file() {
