@@ -30,4 +30,4 @@ REQUEST_BODY='{
 
 curl -X POST -d "$REQUEST_BODY" \
     --header "Content-Type:application/json" \
-    https://circleci.com/api/v1.1/project/gh/DepartmentOfHealth-htbhf/circle-ci-cd-test/tree/master?circle-token="$CIRCLECI_AUTH_TOKEN"
+    https://circleci.com/api/v1.1/project/gh/DepartmentOfHealth-htbhf/htbhf-continous-delivery/tree/master?circle-token="$CIRCLECI_AUTH_TOKEN"
