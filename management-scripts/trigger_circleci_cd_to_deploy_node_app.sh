@@ -24,10 +24,11 @@ REQUEST_BODY='{
     "ZIP_URL": "'${ZIP_URL}'",
     "APP_NAME": "'${APP_NAME}'",
     "APP_VERSION": "'${APP_VERSION}'",
-    "CF_DOMAIN": "london.cloudapps.digital"
+    "CF_DOMAIN": "london.cloudapps.digital",
+    "DEPLOY_TO_PROD": "true"
   }
 }'
 
 curl -X POST -d "$REQUEST_BODY" \
     --header "Content-Type:application/json" \
-    https://circleci.com/api/v1.1/project/gh/DepartmentOfHealth-htbhf/circle-ci-cd-test/tree/master?circle-token="$CIRCLECI_AUTH_TOKEN"
+    https://circleci.com/api/v1.1/project/gh/DepartmentOfHealth-htbhf/htbhf-continous-delivery/tree/master?circle-token="$CIRCLECI_AUTH_TOKEN"
