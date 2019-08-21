@@ -23,12 +23,14 @@ echo "GIT_LATEST_TAG=$GIT_LATEST_TAG, NEW_VERSION=$NEW_VERSION"
 git tag -a ${NEW_VERSION} -m "Release $NEW_VERSION"
 
 # push the new tag back to github
-git config --local user.email "travis@travis-ci.org"
-git config --local user.name "Travis CI"
+git config --local user.email "dhsc-htbhf-support@equalexperts.com"
+git config --local user.name "ci-build"
 
-echo "git push https://[SECRET]@github.com/${TRAVIS_REPO_SLUG}.git ${NEW_VERSION}"
-git push https://${GH_WRITE_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git ${NEW_VERSION}
+GITHUB_REPO_SLUG=${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
+
+echo "git push https://[SECRET]@github.com/${GITHUB_REPO_SLUG}.git ${NEW_VERSION}"
+git push https://${GH_WRITE_TOKEN}@github.com/${GITHUB_REPO_SLUG}.git ${NEW_VERSION}
 
 # create the release in github
 body="{\"tag_name\": \"${NEW_VERSION}\", \"name\": \"${NEW_VERSION}\"}"
-curl -H "Authorization: token ${GH_WRITE_TOKEN}" -H "Content-Type: application/json" -d "${body}" https://api.github.com/repos/${TRAVIS_REPO_SLUG}/releases
+curl -H "Authorization: token ${GH_WRITE_TOKEN}" -H "Content-Type: application/json" -d "${body}" https://api.github.com/repos/${GITHUB_REPO_SLUG}/releases
