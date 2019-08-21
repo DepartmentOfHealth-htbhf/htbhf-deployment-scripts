@@ -17,7 +17,7 @@ Then run `./trigger_cd_to_deploy_java_app.sh`
 #### To deploy a node app
 You will need to set the following environment variables (`export VAR_NAME="var value"`):
 ```
-APP_NAME - The name of the application as deployed. E.g. 'help-to-buy-healthy-foods'
+APP_NAME - The name of the application as deployed. E.g. 'apply-for-healthy-start'
 APP_VERSION - The version to deploy. Should match the version in Github, but exclude the leading 'v'.
 REPO_NAME - The name of the project in github. E.g. 'htbhf-applicant-web-ui'
 TRAVIS_AUTH_TOKEN - The Travis-ci token. Available from travis-ci.com in my account -> settings.
