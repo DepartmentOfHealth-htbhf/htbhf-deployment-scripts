@@ -27,8 +27,8 @@ check_variable_is_set NOTIFY_API_KEY "E.g. f4d5901f-a308-4aa1-a507-cbace83a3bbd"
 
 cf_login
 
-if cf service help-to-buy-healthy-foods-redis >/dev/null 2>/dev/null; then
-    echo "help-to-buy-healthy-foods-redis already exists"
+if cf service apply-for-healthy-start-redis >/dev/null 2>/dev/null; then
+    echo "apply-for-healthy-start-redis already exists"
 else
     echo ""
     PS3="Select the size of the redis service: "
@@ -40,9 +40,9 @@ else
         esac
     done
 
-    echo "Creating ${redisSize} Redis service help-to-buy-healthy-foods-redis"
-    echo "cf create-service redis ${redisSize} help-to-buy-healthy-foods-redis"
-    cf create-service redis ${redisSize} help-to-buy-healthy-foods-redis
+    echo "Creating ${redisSize} Redis service apply-for-healthy-start-redis"
+    echo "cf create-service redis ${redisSize} apply-for-healthy-start-redis"
+    cf create-service redis ${redisSize} apply-for-healthy-start-redis
     pause
 fi
 
@@ -98,7 +98,7 @@ if [[ ${CF_SPACE} == 'production' ]]; then
 	SPACE_SUFFIX=''
 fi
 
-WEB_UI_APP_NAME=help-to-buy-healthy-foods${SPACE_SUFFIX}
+WEB_UI_APP_NAME=apply-for-healthy-start${SPACE_SUFFIX}
 
 EXISTING_WEB_UI=$(cf apps | grep "${WEB_UI_APP_NAME} ")
 if [[ -z ${EXISTING_WEB_UI} ]]; then
