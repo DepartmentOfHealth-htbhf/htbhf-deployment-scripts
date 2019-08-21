@@ -35,13 +35,13 @@ if [[ ${CF_SPACE} == 'production' ]]; then
 fi
 export SPACE_SUFFIX
 
-ENV_VARIABLES=`cf env help-to-buy-healthy-foods${SPACE_SUFFIX}`
+ENV_VARIABLES=`cf env apply-for-healthy-start${SPACE_SUFFIX}`
 GA_TRACKING_ID=`echo "${ENV_VARIABLES}" | grep GA_TRACKING_ID | cut -d':' -f2 | cut -d',' -f1`
 UI_LOG_LEVEL=`echo "${ENV_VARIABLES}" | grep UI_LOG_LEVEL | cut -d':' -f2 | cut -d',' -f1`
 
 cf update-user-provided-service variable-service -p "'{ \"GA_TRACKING_ID\":${GA_TRACKING_ID}, \"UI_LOG_LEVEL\": ${UI_LOG_LEVEL}, \"MAINTENANCE_MODE\":true, \"SERVICE_AVAILABLE_DATE\": \"${DATE}\" }'"
 
 echo
-echo "Restarting starting the application. There will be downtime for a few seconds"
+echo "Restarting the application. There will be downtime for a few seconds"
 echo
-cf restart help-to-buy-healthy-foods${SPACE_SUFFIX}
+cf restart apply-for-healthy-start${SPACE_SUFFIX}

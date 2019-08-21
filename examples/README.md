@@ -17,6 +17,9 @@
     LOGIT_PORT - as above, this is the TCP-SSL port
     GA_TRACKING_ID - can be obtained from the google analytics dashboard (https://analytics.google.com -> admin -> Property settings -> Tracking ID for the appropriate property)
     UI_LOG_LEVEL=info (can be silly|debug|info|warn|error)
+    DWP_API_URI - the URI to DWP API which can be found from one of the existing services in the space (e.g. eligibility service)
+    HMRC_API_URI - the URI to HMRC API which can be found from one of the existing services in the space (e.g. eligibility service)
+    NOTIFY_API_KEY - the key to use for Notify API calls f4d5901f-a308-4aa1-a507-cbace83a3bbd
     ```
     * To run this script you must clone this repository then `cd examples; bash ./create_services.sh`.
 
