@@ -8,6 +8,9 @@
 # quit at the first error
 set -e
 
+git config --local user.email "dhsc-htbhf-support@equalexperts.com"
+git config --local user.name "ci-build"
+
 # make sure we know about all tags
 git fetch --tags -q
 
@@ -23,9 +26,6 @@ echo "GIT_LATEST_TAG=$GIT_LATEST_TAG, NEW_VERSION=$NEW_VERSION"
 git tag -a ${NEW_VERSION} -m "Release $NEW_VERSION"
 
 # push the new tag back to github
-git config --local user.email "dhsc-htbhf-support@equalexperts.com"
-git config --local user.name "ci-build"
-
 GITHUB_REPO_SLUG=${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}
 
 echo "git push https://[SECRET]@github.com/${GITHUB_REPO_SLUG}.git ${NEW_VERSION}"

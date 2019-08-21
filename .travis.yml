@@ -1,8 +1,0 @@
-language: generic
-
-after_success:
-- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && ./create_release.sh
-
-notifications:
-  slack:
-    secure: oNdsOWdaS7jPN/t5ArCXli4NEPfgRnDgBwHMEG+7PThe8gXRf0ONwuaUfqUV1l3ni2LfutNeeRmTtfKijlxoWGIvw5B1uwfCsvbSEVAKt/AA5T6d2jK3ZJLvhylwQlWXjAjfUb18cDyemrJh3ozilmpeayidiN5KjnH7XiZhtu4cM6N3uL32RQd9DBTldxF+gwCvMLpdLRs3geu2Tazm576D/7Cosmjp8O93O3anjm7VVwnawbgeUOjBgu9pbuvtOPpodAmvvefNVtF08fpETcAtTykOkS86emIMkhcwSfg4Wrqn/VqYTxosVLK4xz437+sR22plEEZ7ifF6oMUcV8/h52usz3c+qI1B5EUyvTvCNiJXtCkO9E7ttCYdgI4+S47l9jifb70ICkCFUaIeoHndXZKHWj/5WDS+gEtt+mF/nWy44qQPtpechK5FUn1CRCqvAWtLg/8Mv8MUShz5WTa7E64wlSF19ChjE0YmXwo7ZNE47/YLW2nPnPHPx0OtXDtQbl84wSjx6fpSD1QQjde9ow6lkrCJ3EGM5nTxo8NWDC1/mQSKZpDf/jZ0M96diRyZqFGcOr+yQny7PF63UuOLY5k2oqjcKqMRAp9/o1zW/o3sbpmIERyoBE5jQoQ2i27OAuRFJMRg10NEC9GPm6LXloIqKoYJPFdQcLNwy34=
