@@ -19,14 +19,14 @@ MANIFEST_URL=${BINTRAY_ROOT_URL}/${APP_NAME}-manifest/${APP_VERSION}/${APP_NAME}
 REQUEST_BODY='{
   "build_parameters": {
     "CD_BUILD":true,
-    "RUN_COMPATIBILITY_TESTS": true,
+    "RUN_COMPATIBILITY_TESTS": false,
     "RUN_PERFORMANCE_TESTS": true,
     "GITHUB_REPO_SLUG": "'${GITHUB_REPO_SLUG}'",
     "APP_URL": "'${APP_URL}'",
     "MANIFEST_URL": "'${MANIFEST_URL}'",
     "APP_NAME": "'${APP_NAME}'",
     "APP_VERSION": "'${APP_VERSION}'",
-    "CF_DOMAIN": "london.cloudapps.digital",
+    "CF_DOMAIN": "apps.internal",
     "DEPLOY_TO_PROD": "true"
   }
 }'
