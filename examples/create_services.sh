@@ -24,6 +24,8 @@ check_variable_is_set UI_LOG_LEVEL "E.g. info"
 check_variable_is_set DWP_API_URI "E.g. test.london.cloudapps.digital"
 check_variable_is_set HMRC_API_URI "E.g. test.london.cloudapps.digital"
 check_variable_is_set NOTIFY_API_KEY "E.g. f4d5901f-a308-4aa1-a507-cbace83a3bbd"
+check_variable_is_set OS_PLACES_API_KEY "E.g. fcb67b62-4b20-4222-9719-04f39be50f28"
+check_variable_is_set OS_PLACES_URI "E.g. https://api.ordnancesurvey.co.uk"
 
 cf_login
 
@@ -170,6 +172,16 @@ else
   echo "cf create-user-provided-service notify-variable-service -p '{\"NOTIFY_API_KEY\": \"${NOTIFY_API_KEY}\"}'" > tmp-notify-variable-service.sh
   source tmp-notify-variable-service.sh
   rm tmp-notify-variable-service.sh
+fi
+
+if cf service os-places-variable-service >/dev/null 2>/dev/null; then
+    echo "os-places-service already exists"
+else
+  echo "Setting up os-places variable service to provide notify api key to apps"
+  echo "cf create-user-provided-service os-places-variable-service -p '{\"OS_PLACES_API_KEY\": \"${OS_PLACES_API_KEY}\", \"OS_PLACES_URI\": \"${OS_PLACES_URI}\" }'"
+  echo "cf create-user-provided-service os-places-variable-service -p '{\"OS_PLACES_API_KEY\": \"${OS_PLACES_API_KEY}\", \"OS_PLACES_URI\": \"${OS_PLACES_URI}\" }'" > tmp-os-places-variable-service.sh
+  source tmp-os-places-variable-service.sh
+  rm tmp-os-places-variable-service.sh
 fi
 
 echo "Done"
