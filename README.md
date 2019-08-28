@@ -107,11 +107,13 @@ APP_VERSION=`cat version.properties | grep "version" | cut -d'=' -f2`
 APP_PATH="build/libs/$APP_NAME-$APP_VERSION.jar"
 # note that for node projects APP_PATH would simply be `.`
 
+# define the space to deploy to
+export CF_SPACE=development
 
 # run the deployment script
 /bin/bash ${SCRIPT_DIR}/deploy.sh
 ```
-Then invoke this script in your travis-ci build - in `.travis.yml`:
+Then invoke this script in your travis-ci build - in `.circleci/config.yml`:
 ```
 script:
 - ./gradlew build -s && ./ci_scripts/ci_deploy.sh && ./gradlew ciPerformRelease -s
