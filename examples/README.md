@@ -29,3 +29,13 @@ These scripts are `trigger_cd_to_deploy_[node|java]_app.sh` - see individual scr
 The scripts will deploy to staging then deploy straight to production (assuming a successful deploy to staging) without running any tests.
 
 There is an additional script to run tests in staging without deploying any applications: `trigger_cd_to_run_tests.sh`
+
+## Updating a variable service
+To update a value in a variable service, all values in that service must be provided. 
+E.g. `cf update-user-provided-service os-places-variable-service -p '{\"OS_PLACES_API_KEY\": \"${OS_PLACES_API_KEY}\", \"OS_PLACES_URI\": \"${OS_PLACES_URI}\" }'`
+
+Any service that uses that variable service needs to be restaged
+E.g. `cf restage apply-for-healthy-start`
+######Please note that restaging an application will lead to a brief period of downtime
+To avoid downtime the application should instead be re-deployed using a blue-green deployment process. 
+You can use the management scripts (`management-scripts/trigger_circleci_cd_to_deploy_*_app.sh`) to invoke such a deployment.
