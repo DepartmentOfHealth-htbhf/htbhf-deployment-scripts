@@ -36,3 +36,6 @@ E.g. `cf update-user-provided-service os-places-variable-service -p '{\"OS_PLACE
 
 Any service that uses that variable service needs to be restaged
 E.g. `cf restage apply-for-healthy-start`
+######Please note that restaging an application will lead to a brief period of downtime
+To avoid downtime the application should instead be re-deployed using a blue-green deployment process. 
+You can use the management scripts (`management-scripts/trigger_circleci_cd_to_deploy_*_app.sh`) to invoke such a deployment.
