@@ -5,17 +5,11 @@
 # note that instance sizes might need to be changed
 # this script is not run as part of any automated process - trigger it manually if required
 
-pause(){
-    read -p "Press [Enter] key to continue..."
-}
-
 source ../cf_deployment_functions.sh
 
  # check necessary environment variables are set and not empty
  # please ensure any changes to required variables are also updated in README.md
 check_login_variables_are_set
-check_variable_is_set BASIC_AUTH_USER "Username for basic authentication of the applicant web ui"
-check_variable_is_set BASIC_AUTH_PASS "Password for basic authentication of the applicant web ui"
 check_variable_is_set CF_PUBLIC_DOMAIN "E.g. london.cloudapps.digital"
 check_variable_is_set LOGIT_ENDPOINT "See https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app"
 check_variable_is_set LOGIT_PORT "See https://docs.cloud.service.gov.uk/monitoring_apps.html#configure-app"
@@ -23,9 +17,21 @@ check_variable_is_set GA_TRACKING_ID "The google analytics tracking id"
 check_variable_is_set UI_LOG_LEVEL "E.g. info"
 check_variable_is_set DWP_API_URI "E.g. test.london.cloudapps.digital"
 check_variable_is_set HMRC_API_URI "E.g. test.london.cloudapps.digital"
+check_variable_is_set CARD_SERVICES_API_URI "E.g. test.london.cloudapps.digital"
 check_variable_is_set NOTIFY_API_KEY "E.g. f4d5901f-a308-4aa1-a507-cbace83a3bbd"
 check_variable_is_set OS_PLACES_API_KEY "E.g. fcb67b62-4b20-4222-9719-04f39be50f28"
 check_variable_is_set OS_PLACES_URI "E.g. https://api.ordnancesurvey.co.uk"
+
+check_variable_is_set SECURE_WEB_UI_ROUTE "true/false. Whether to create a route securing the web-ui with basic auth"
+if [[ "$SECURE_WEB_UI_ROUTE" == "true" ]]; then
+  check_variable_is_set BASIC_AUTH_USER "Username for basic authentication of the applicant web ui"
+  check_variable_is_set BASIC_AUTH_PASS "Password for basic authentication of the applicant web ui"
+fi
+
+pause(){
+    read -p "Press [Enter] key to continue..."
+}
+
 
 cf_login
 
@@ -102,41 +108,46 @@ fi
 
 WEB_UI_APP_NAME=apply-for-healthy-start${SPACE_SUFFIX}
 
-EXISTING_WEB_UI=$(cf apps | grep "${WEB_UI_APP_NAME} ")
-if [[ -z ${EXISTING_WEB_UI} ]]; then
-	echo "Creating holding page application '${WEB_UI_APP_NAME}' in order to apply basic auth route"
-	mkdir tmp-holding-page
-	cd tmp-holding-page
-	echo -e "<html>\n<head>\n<title>${WEB_UI_APP_NAME}</title>\n</head>\n<body>\n<p>Temporary holding page</p>\n</body>\n</html>" > index.html
-	echo -e "---\napplications:\n- name: ${WEB_UI_APP_NAME}\n  memory: 64M\n  buildpack: staticfile_buildpack" > manifest.yml
-	cf push
-	cd ..
-	rm -rf tmp-holding-page
-    pause
-else
-    echo "${WEB_UI_APP_NAME} already exists (this may be a holding page)"
-fi
-
-EXISTING_ROUTE=$(cf routes | grep "${WEB_UI_APP_NAME}-route ")
-if [[ -z ${EXISTING_WEB_UI} ]]; then
-    echo "Creating route to secure web ui with basic auth"
-    # see https://docs.cloud.service.gov.uk/deploying_services/route_services/#example-route-service-to-add-authentication
-    mkdir tmp-basic-auth-route
-    cd tmp-basic-auth-route
-    git clone https://github.com/alext/cf_basic_auth_route_service .
-    cf push ${WEB_UI_APP_NAME}-route --no-start -s cflinuxfs3
-    cf set-env ${WEB_UI_APP_NAME}-route AUTH_USERNAME ${BASIC_AUTH_USER}
-    cf set-env ${WEB_UI_APP_NAME}-route AUTH_PASSWORD ${BASIC_AUTH_PASS}
-    cf start ${WEB_UI_APP_NAME}-route
-    echo "cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP_NAME}-route.${CF_PUBLIC_DOMAIN}"
-    cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP_NAME}-route.${CF_PUBLIC_DOMAIN}
-    echo "cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}"
-    cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}
+if [[ "$SECURE_WEB_UI_ROUTE" == "true" ]]; then
+  echo "SECURE_WEB_UI_ROUTE is true - Securing '${WEB_UI_APP_NAME}' with basic auth route"
+  EXISTING_WEB_UI=$(cf apps | grep "${WEB_UI_APP_NAME} ")
+  if [[ -z ${EXISTING_WEB_UI} ]]; then
+    echo "Creating holding page application '${WEB_UI_APP_NAME}' in order to apply basic auth route"
+    mkdir tmp-holding-page
+    cd tmp-holding-page
+    echo -e "<html>\n<head>\n<title>${WEB_UI_APP_NAME}</title>\n</head>\n<body>\n<p>Temporary holding page</p>\n</body>\n</html>" > index.html
+    echo -e "---\napplications:\n- name: ${WEB_UI_APP_NAME}\n  memory: 64M\n  buildpack: staticfile_buildpack" > manifest.yml
+    cf push
     cd ..
-    rm -rf tmp-basic-auth-route
-    pause
+    rm -rf tmp-holding-page
+      pause
+  else
+      echo "${WEB_UI_APP_NAME} already exists (this may be a holding page)"
+  fi
+
+  EXISTING_ROUTE=$(cf routes | grep "${WEB_UI_APP_NAME}-route ")
+  if [[ -z ${EXISTING_WEB_UI} ]]; then
+      echo "Creating route to secure web ui with basic auth"
+      # see https://docs.cloud.service.gov.uk/deploying_services/route_services/#example-route-service-to-add-authentication
+      mkdir tmp-basic-auth-route
+      cd tmp-basic-auth-route
+      git clone https://github.com/alext/cf_basic_auth_route_service .
+      cf push ${WEB_UI_APP_NAME}-route --no-start -s cflinuxfs3
+      cf set-env ${WEB_UI_APP_NAME}-route AUTH_USERNAME ${BASIC_AUTH_USER}
+      cf set-env ${WEB_UI_APP_NAME}-route AUTH_PASSWORD ${BASIC_AUTH_PASS}
+      cf start ${WEB_UI_APP_NAME}-route
+      echo "cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP_NAME}-route.${CF_PUBLIC_DOMAIN}"
+      cf create-user-provided-service ${WEB_UI_APP_NAME}-route -r https://${WEB_UI_APP_NAME}-route.${CF_PUBLIC_DOMAIN}
+      echo "cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}"
+      cf bind-route-service ${CF_PUBLIC_DOMAIN} ${WEB_UI_APP_NAME}-route --hostname ${WEB_UI_APP_NAME}
+      cd ..
+      rm -rf tmp-basic-auth-route
+      pause
+  else
+      echo "${WEB_UI_APP_NAME}-route already exists"
+  fi
 else
-    echo "${WEB_UI_APP_NAME}-route already exists"
+  echo "SECURE_WEB_UI_ROUTE is false - not securing '${WEB_UI_APP_NAME}'"
 fi
 
 if cf service logit-ssl-drain >/dev/null 2>/dev/null; then
