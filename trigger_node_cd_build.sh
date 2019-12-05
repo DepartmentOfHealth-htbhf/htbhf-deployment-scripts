@@ -21,7 +21,7 @@ VERSION=$(sed -nE 's/^[ \\t]*"version": "([0-9]{1,}\.[0-9]{1,}\.[0-9x]{1,})",$/\
 GIT_REPO_URL=$(git remote -v | grep fetch | grep origin | sed -nE 's/^origin\s(.*)\.git.*$/\1/p' | sed 's~git@github.com:~https://~')
 ZIP_URL="${GIT_REPO_URL}/archive/v${VERSION}.zip"
 RUN_COMPATIBILITY_TESTS=${RUN_COMPATIBILITY_TESTS:-true}
-RUN_PERFORMANCE_TESTS=${RUN_PERFORMANCE_TESTS:-true}
+RUN_PERFORMANCE_TESTS=${RUN_PERFORMANCE_TESTS:-false}
 COMMIT_MESSAGE=$(echo -e "${TRAVIS_COMMIT_MESSAGE}" | tr -d '\n\r')
 
 REQUEST_BODY='{
