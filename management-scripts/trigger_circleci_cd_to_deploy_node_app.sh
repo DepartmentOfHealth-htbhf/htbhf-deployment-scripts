@@ -19,7 +19,7 @@ REQUEST_BODY='{
   "build_parameters": {
     "CD_BUILD":true,
     "RUN_COMPATIBILITY_TESTS": true,
-    "RUN_PERFORMANCE_TESTS": true,
+    "RUN_PERFORMANCE_TESTS": false,
     "GITHUB_REPO_SLUG": "'${GITHUB_REPO_SLUG}'",
     "ZIP_URL": "'${ZIP_URL}'",
     "APP_NAME": "'${APP_NAME}'",
