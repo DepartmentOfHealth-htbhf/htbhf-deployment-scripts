@@ -31,6 +31,8 @@ REQUEST_BODY='{
   }
 }'
 
+echo "triggering CD with the following request body: ${REQUEST_BODY}"
+
 curl -X POST -d "$REQUEST_BODY" \
     --header "Content-Type:application/json" \
     https://circleci.com/api/v1.1/project/gh/DepartmentOfHealth-htbhf/htbhf-continous-delivery/tree/master?circle-token="$CIRCLECI_AUTH_TOKEN"
