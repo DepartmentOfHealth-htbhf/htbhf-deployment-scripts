@@ -25,10 +25,15 @@
 
 ## Deploying applications to staging and production
 There are scripts to trigger the CD pipeline to deploy a specific version of an application to production (via staging).
-These scripts are `trigger_cd_to_deploy_[node|java]_app.sh` - see individual scripts for instructions on what environment variables are required.
+These scripts are `trigger_circleci_cd_to_deploy_[node|java]_app.sh` - see individual scripts for instructions on what environment variables are required.
 The scripts will deploy to staging then deploy straight to production (assuming a successful deploy to staging) without running any tests.
 
-There is an additional script to run tests in staging without deploying any applications: `trigger_cd_to_run_tests.sh`
+There is an additional script to run tests in staging without deploying any applications: `trigger_circleci_cd_to_run_tests.sh`
+
+# Variable services
+Most of the applications require environment variables at runtime - these are 'User-Provided Service Instances' - see
+[https://docs.cloudfoundry.org/devguide/services/user-provided.html](https://docs.cloudfoundry.org/devguide/services/user-provided.html) for further details.
+The [create_services.sh](create_services.sh) script will create all required variables services in a new environment, but must be invoked manually for each environment.
 
 ## Updating a variable service
 To update a value in a variable service, all values in that service must be provided. 
