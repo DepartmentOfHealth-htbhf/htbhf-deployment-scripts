@@ -119,29 +119,3 @@ script:
 - ./gradlew build -s && ./ci_scripts/ci_deploy.sh && ./gradlew ciPerformRelease -s
 ```
 (This example assumes your project uses gradle with the shipkit plugin).
-
-### Chrome version and chromedriver mismatch problems
-
-In order for the browser based tests to function correctly, it is vital that the version of Chrome we use is supported by the version
-of [chromedriver](https://www.npmjs.com/package/chromedriver) we use. As we always use the latest version of Chrome in Travis, and 
-have no control over this, the tests will fail when the npm package isn't updated to support this new version. We have seen this in
-the [following build](https://travis-ci.com/DepartmentOfHealth-htbhf/htbhf-continous-delivery/builds/109416943), which gave the following
-error where the latest stable version of chrome became version 74:
-
-```
-Error: SessionNotCreatedError: session not created: Chrome version must be between 70 and 73
-         (Driver info: chromedriver=73.0.3683.20 (8e2b610813e167eee3619ac4ce6e42e3ec622017),platform=Linux 4.4.0-101-generic x86_64)
-           at EnterName.open (/home/travis/build/DepartmentOfHealth-htbhf/htbhf-continous-delivery/application/htbhf-applicant-web-ui-0.1.175/src/test/common/page/page.js:35:13)
-           at <anonymous>
-           at process._tickCallback (internal/process/next_tick.js:188:7)
-```
-
-When this does happen, until there is a new version of chromedriver, it is possible to download and use a different version
-of chromedriver as a part of the build process for both web-ui and continuous-delivery. This has been done
-for version 74 of chrome and chromedriver and can be seen in the following commits:
-
-- [htbhf-applicant-web-ui](https://github.com/DepartmentOfHealth-htbhf/htbhf-applicant-web-ui/pull/221/files)
-- [htbhf-continous-delivery](https://github.com/DepartmentOfHealth-htbhf/htbhf-continous-delivery/pull/68/files)
-
-Ideally, when a new version of chromedriver is released to support the new version os Chrome, this should be reverted and the new
-version used instead - this note should be retained in the readme as a useful reference should this happen again.
